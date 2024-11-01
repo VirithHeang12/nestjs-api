@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { Post } from '../interfaces/posts.interface';
 import { UsersService } from 'src/users/providers/users/users.service';
+import { CreatePost } from '../dtos/create-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -42,5 +43,12 @@ export class PostsService {
             throw new HttpException('User not found', 404);
         }
         return this.posts.filter(post => post.userId === userId);
+    }
+
+    public createPost(userId: number, post: CreatePost): CreatePost {
+        if (!this.usersService.getUser({ id: userId })) {
+            throw new HttpException('User not found', 404);
+        }
+        return post;
     }
 }

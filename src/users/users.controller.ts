@@ -3,7 +3,9 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUsersParamDto } from './dtos/get-users-param,dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
 import { UsersService } from './providers/users/users.service';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
 
@@ -13,6 +15,37 @@ export class UsersController {
 
     }
 
+    @ApiOperation({
+        summary: 'Get all users',
+        description: 'Get all users from the database',
+        responses: {
+            [HttpStatus.OK]: {
+                description: 'The users were successfully retrieved',
+                links: {
+                    'next': {
+                        description: 'The next page of users',
+                    }
+                }
+            },
+            [HttpStatus.INTERNAL_SERVER_ERROR]: {
+                description: 'An error occurred while trying to retrieve the users'
+            }
+        }     
+    })
+    @ApiQuery({
+        name: 'limit',
+        required: false,
+        type: Number,
+        default: 10,
+        description: 'Limit of users per page'
+    })
+    @ApiQuery({
+        name: 'page',
+        required: false,
+        type: Number,
+        default: 1,
+        description: 'Page number'
+    })
     @Get()
     public getUsers(
         @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
