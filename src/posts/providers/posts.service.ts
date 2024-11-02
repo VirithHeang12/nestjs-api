@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { Post } from '../interfaces/posts.interface';
 import { UsersService } from 'src/users/providers/users/users.service';
 import { CreatePost } from '../dtos/create-post.dto';
+import { PatchPostDto } from '../dtos/patch-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -50,5 +51,19 @@ export class PostsService {
             throw new HttpException('User not found', 404);
         }
         return post;
+    }
+
+    public updatePost(userId: number, postId: number, post: PatchPostDto): Post {
+        if (!this.usersService.getUser({ id: userId })) {
+            throw new HttpException('User not found', 404);
+        }
+        const postIndex = this.posts.findIndex(post => post.id === postId);
+        if (postIndex === -1) {
+            throw new HttpException('Post not found', 404);
+        }
+        return {
+            ...this.posts[postIndex],
+            ...post,
+        };
     }
 }

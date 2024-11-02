@@ -1,6 +1,11 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from '../providers/auth.service';
 
+/**
+ * AuthController is a class that contains the endpoints for the authentication.
+ * 
+ * @class AuthController
+ */
 @Controller('auth')
 export class AuthController {
     /**
