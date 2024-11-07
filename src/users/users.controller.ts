@@ -67,7 +67,7 @@ export class UsersController {
         @Headers() headers: any,
         @Ip() ip: string
     ) {
-        console.log(createUserDto, headers, ip);
+        return this.usersService.createUser(createUserDto);
     }
 
     @Patch('/:id')

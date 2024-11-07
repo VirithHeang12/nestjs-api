@@ -16,8 +16,8 @@ export class AuthService {
      * 
      * @returns any
     */
-    public login(email: string, password: string): any {
-        const userId = this.usersService.getUserIdByEmailAndPassword(email, password);
+    public async login(email: string, password: string): Promise<any> {
+        const userId = await this.usersService.getUserIdByEmailAndPassword(email, password);
 
         if (!userId) {
             throw new HttpException('User not found.', 404);

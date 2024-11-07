@@ -1,7 +1,7 @@
-import { IsArray, IsEnum, IsISO8601, IsJSON, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Matches, MinLength, ValidateNested } from "class-validator";
+import { IsArray, IsEnum, IsISO8601, IsJSON, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
 import { PostTypes } from "../enums/post-types.enum";
 import { PostStatuses } from "../enums/post-statuses.enum";
-import { CreatePostMetaOptionsDto } from "./create-post-meta-options.dto";
+import { CreatePostMetaOptionsDto } from "../../meta-options/dtos/create-post-meta-options.dto";
 import { Type } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
@@ -25,6 +25,7 @@ export class CreatePost {
     @IsNotEmpty()
     @IsString()
     @MinLength(5)
+    @MaxLength(512)
     title: string;
 
     @ApiProperty({
@@ -47,6 +48,7 @@ export class CreatePost {
     })
     @IsNotEmpty()
     @IsString()
+    @MaxLength(256)
     @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
         message: 'Slug must be a valid URL slug',
     })
@@ -93,6 +95,7 @@ export class CreatePost {
     })
     @IsOptional()
     @IsUrl()
+    @MaxLength(1024)
     featuredImageUrl?: string;
 
     @ApiPropertyOptional({
