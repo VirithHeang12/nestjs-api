@@ -18,19 +18,32 @@ export class PostsService {
     ) {}
 
     public async findAll(userId: number): Promise<Post[]> {
-        if (!this.usersService.getUser({ id: userId })) {
+        const user = await this.usersService.getUser({ id: userId });
+
+        if (!user) {
             throw new HttpException('User not found', 404);
         }
-        return this.postsRepository.find();
+
+        return this.postsRepository.find({
+            where: {
+                id: userId,
+            },
+        });
     }
 
     public async createPost(userId: number, post: CreatePostDto): Promise<Post> {
-        if (!this.usersService.getUser({ id: userId })) {
+        const user = await this.usersService.getUser({ id: userId });
+
+        if (!user) {
             throw new HttpException('User not found', 404);
         }
-        const postEntity = this.postsRepository.create(post);
 
-        return this.postsRepository.save(postEntity);      
+        const postEntity = this.postsRepository.create({
+            ...post,
+            author: user,
+        });
+
+        return await this.postsRepository.save(postEntity);      
     }
 
     public async updatePost(userId: number, postId: number, post: PatchPostDto): Promise<Post> {

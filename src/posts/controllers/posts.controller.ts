@@ -29,7 +29,7 @@ export class PostsController {
     @Post(':userId/posts')
     @HttpCode(201)
     public async createPost(@Body() post: CreatePostDto, @Param('userId', ParseIntPipe) userId: number): Promise<any> {
-        return this.postsService.createPost(userId, post);
+        return await this.postsService.createPost(userId, post);
     }
 
     @ApiOperation({

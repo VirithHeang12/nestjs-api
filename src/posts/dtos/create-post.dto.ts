@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsISO8601, IsJSON, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
+import { IsArray, IsEnum, IsInt, IsISO8601, IsJSON, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
 import { PostTypes } from "../enums/post-types.enum";
 import { PostStatuses } from "../enums/post-statuses.enum";
 import { CreatePostMetaOptionsDto } from "../../meta-options/dtos/create-post-meta-options.dto";
