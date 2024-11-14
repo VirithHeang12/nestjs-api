@@ -57,10 +57,19 @@ export class PostsController {
     @Delete(':userId/posts/:postId')
     @HttpCode(200)
     public async deletePost(@Param('userId', ParseIntPipe) userId: number, @Param('postId', ParseIntPipe) postId: number) {
-        const id = await this.postsService.deletePost(userId, postId);
+        const result = await this.postsService.deletePost(userId, postId);
+
+        if (result.affected === 0) {
+            return {
+                message: `Post with id ${postId} not found`,
+                status: HttpStatus.NOT_FOUND,
+            }
+        }
+
         return {
-            message: `Post with id ${id} has been successfully deleted`,
+            message: `Post with id ${postId} has been deleted`,
             status: HttpStatus.OK,
+            result
         }
     }
 }

@@ -3,7 +3,7 @@ import { UsersService } from 'src/users/providers/users/users.service';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Post } from '../post.entity';
 import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { MetaOptionsService } from 'src/meta-options/providers/meta-options.service';
@@ -82,7 +82,7 @@ export class PostsService {
         return await this.postsRepository.save(postToUpdate);
     }
 
-    public async deletePost(userId: number, postId: number): Promise<number> {
+    public async deletePost(userId: number, postId: number): Promise<DeleteResult> {
         if (!this.usersService.getUser({ id: userId })) {
             throw new HttpException('User not found', 404);
         }
@@ -91,10 +91,7 @@ export class PostsService {
         if (!postToDelete) {
             throw new HttpException('Post not found', 404);
         }  
-        await this.postsRepository.delete(postId);
 
-        await this.metaOptionsService.delete(postToDelete.metaOption.id);
-
-        return postToDelete.id
+        return await this.postsRepository.delete(postId);
     }
 }

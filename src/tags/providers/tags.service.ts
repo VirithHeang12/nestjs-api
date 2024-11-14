@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTagDto } from '../dtos/create-tag.dto';
 import { Tag } from '../tag.entity';
-import { In, Repository } from 'typeorm';
+import { DeleteResult, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -23,5 +23,9 @@ export class TagsService {
                 id: In(ids),
             },
         })
+    }
+
+    public async deleteTag(id: number): Promise<DeleteResult> {
+        return await this.tagRepository.delete(id);
     }
 }
