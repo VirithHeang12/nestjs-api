@@ -14,8 +14,8 @@ export class PostsController {
 
     @Get(':userId/posts')
     @HttpCode(200)
-    public getAllPosts(@Param('userId', ParseIntPipe) userId: number) {
-        return this.postsService.findAll(userId);
+    public async getAllPosts(@Param('userId', ParseIntPipe) userId: number): Promise<any> {
+        return await this.postsService.findAll(userId);
     }
 
     @ApiOperation({
