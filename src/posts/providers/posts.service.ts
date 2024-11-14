@@ -1,69 +1,63 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { Post } from '../interfaces/posts.interface';
 import { UsersService } from 'src/users/providers/users/users.service';
-import { CreatePost } from '../dtos/create-post.dto';
+import { CreatePostDto } from '../dtos/create-post.dto';
 import { PatchPostDto } from '../dtos/patch-post.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Post } from '../post.entity';
+import { MetaOption } from 'src/meta-options/meta-option.entity';
+import { MetaOptionsService } from 'src/meta-options/providers/meta-options.service';
 
 @Injectable()
 export class PostsService {
 
-    private readonly posts: Post[] = [
-        {
-            userId: 1,
-            id: 1,
-            title: 'Post 1',
-            body: 'Post 1 body'
-        },
-        {
-            userId: 1,
-            id: 2,
-            title: 'Post 2',
-            body: 'Post 2 body'
-        },
-        {
-            userId: 2,
-            id: 3,
-            title: 'Post 3',
-            body: 'Post 3 body'
-        },
-        {
-            userId: 2,
-            id: 4,
-            title: 'Post 4',
-            body: 'Post 4 body'
-        }
-    ];
-
-
     constructor(
         private readonly usersService: UsersService,
+        @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
+        private readonly metaOptionsService: MetaOptionsService
     ) {}
 
-    public findAll(userId: number): Post[] {
+    public async findAll(userId: number): Promise<Post[]> {
         if (!this.usersService.getUser({ id: userId })) {
             throw new HttpException('User not found', 404);
         }
-        return this.posts.filter(post => post.userId === userId);
+        return this.postsRepository.find();
     }
 
-    public createPost(userId: number, post: CreatePost): CreatePost {
+    public async createPost(userId: number, post: CreatePostDto): Promise<Post> {
         if (!this.usersService.getUser({ id: userId })) {
             throw new HttpException('User not found', 404);
         }
-        return post;
+        const postEntity = this.postsRepository.create(post);
+
+        return this.postsRepository.save(postEntity);      
     }
 
-    public updatePost(userId: number, postId: number, post: PatchPostDto): Post {
+    public async updatePost(userId: number, postId: number, post: PatchPostDto): Promise<Post> {
         if (!this.usersService.getUser({ id: userId })) {
             throw new HttpException('User not found', 404);
         }
-        const postIndex = this.posts.findIndex(post => post.id === postId);
-        if (postIndex === -1) {
+        const postToUpdate = await this.postsRepository.findOne({ where: { id: postId } });
+
+        if (!postToUpdate) {
             throw new HttpException('Post not found', 404);
         }
-        return {
-            ...this.posts[postIndex],
-            ...post,
-        };
+        return this.postsRepository.save({ ...postToUpdate, ...post }); 
+    }
+
+    public async deletePost(userId: number, postId: number): Promise<number> {
+        if (!this.usersService.getUser({ id: userId })) {
+            throw new HttpException('User not found', 404);
+        }
+        const postToDelete = await this.postsRepository.findOne({ where: { id: postId } });
+
+        if (!postToDelete) {
+            throw new HttpException('Post not found', 404);
+        }  
+        await this.postsRepository.delete(postId);
+
+        await this.metaOptionsService.delete(postToDelete.metaOption.id);
+
+        return postToDelete.id
     }
 }

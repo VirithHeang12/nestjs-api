@@ -21,6 +21,7 @@ import { MetaOptionsModule } from './meta-options/meta-options.module';
         autoLoadEntities: true,
         synchronize: true,
         retryAttempts: 1,
+        entityPrefix: 'nestjs_',
       }),
     }),
     UsersModule, PostsModule, AuthModule, TagsModule, MetaOptionsModule],

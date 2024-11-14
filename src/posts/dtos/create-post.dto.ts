@@ -5,7 +5,7 @@ import { CreatePostMetaOptionsDto } from "../../meta-options/dtos/create-post-me
 import { Type } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
-export class CreatePost {
+export class CreatePostDto {
     @ApiProperty({
         description: 'User ID',
         example: 1,
@@ -120,51 +120,22 @@ export class CreatePost {
     @MinLength(3, { each: true })
     tags?: string[];
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         description: 'Meta Options',
-        type: 'array',
-        example: [
-            {
-                key: 'key1',
-                value: 'value1',
-            },
-            {
-                key: 'key2',
-                value: 'value2',
-            },
-        ],
-        default: [
-            {
-                key: 'key1',
-                value: 'value1',
-            },
-            {
-                key: 'key2',
-                value: 'value2',
-            },
-        ],
+        type: CreatePostMetaOptionsDto,
         required: false,
         items: {
             type: 'object',
             properties: {
-                key: {
+                metaValue: {
                     type: 'string',
-                    example: 'key1',
-                    default: 'key1',
-                    required: ['Key is required'],
-                },
-                value: {
-                    type: 'string',
-                    example: 'value1',
-                    default: 'value1',
-                    required: ['Value is required'],
+                    example: '{"key": "value"}',
+                    default: '{"key": "value"}',
                 },
             },
-        },
+        }
     })
     @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
     @Type(() => CreatePostMetaOptionsDto)
-    metaOptions?: CreatePostMetaOptionsDto[];
+    metaOption?: CreatePostMetaOptionsDto;
 }

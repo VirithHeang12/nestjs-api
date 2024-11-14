@@ -15,4 +15,8 @@ export class MetaOptionsService {
         const metaOption = this.metaOptionRepository.create(data);
         return await this.metaOptionRepository.save(metaOption);
     }
+
+    public async delete(id: number): Promise<void> {
+        await this.metaOptionRepository.delete(id);
+    }
 }

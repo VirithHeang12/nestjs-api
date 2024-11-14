@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-
     constructor(
         @Inject(forwardRef(() => AuthService))
         private readonly authService: AuthService,

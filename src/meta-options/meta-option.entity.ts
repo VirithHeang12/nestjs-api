@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Post } from "src/posts/post.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('meta_options')
 export class MetaOption {
@@ -33,4 +34,10 @@ export class MetaOption {
     @DeleteDateColumn()
     deletedAt: Date;
 
+    @OneToOne(() => Post, post => post.metaOption, {
+        onDelete: 'CASCADE',
+        nullable: false,
+    })
+    @JoinColumn()
+    post: Post;
 }
