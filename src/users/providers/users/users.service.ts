@@ -1,4 +1,5 @@
 import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/providers/auth.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
@@ -12,7 +13,8 @@ export class UsersService {
         @Inject(forwardRef(() => AuthService))
         private readonly authService: AuthService,
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        private readonly configService: ConfigService,
     ) {}
 
     /**

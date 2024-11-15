@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PostTypes } from "./enums/post-types.enum";
 import { PostStatuses } from "./enums/post-statuses.enum";
 import { MetaOption } from "src/meta-options/meta-option.entity";
